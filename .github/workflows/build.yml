@@ -1,4 +1,4 @@
-name: Build Moustache Theos Tweak
+name: Build Moustache Tweak
 
 on:
   workflow_dispatch:
@@ -23,22 +23,20 @@ jobs:
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
           echo "$HOME/theos/bin" >> $GITHUB_PATH
 
-      - name: Verify project files
+      - name: Verify files
         run: ls -R
 
       - name: Build package
         run: |
           export THEOS=$HOME/theos
+          make clean || true
           make package
 
-      - name: Collect output files
+      - name: Collect output
         run: |
           mkdir -p output
           find . -name "*.deb" -exec cp {} output/ \; || true
           find . -name "*.dylib" -exec cp {} output/ \; || true
-
-      - name: Show output
-        run: ls -R output || true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
